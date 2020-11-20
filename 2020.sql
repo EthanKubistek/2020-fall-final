@@ -27,7 +27,7 @@ CREATE TABLE Users (
     Phone varchar(255),
     Password varchar(255),
     DOB varchar(255),
-    Role int NOT NULL
+    Role int NOT NULL,
     FOREIGN KEY (Role)
       REFERENCES Role(Role_id)
       ON DELETE CASCADE
@@ -42,6 +42,7 @@ CREATE TABLE Role (
 
     Unique(Role_name)
 );
+/* Table to list the Employess on staff*/
 
 CREATE TABLE Employess (
     employee_id int NOT NULL PRIMARY KEY,
@@ -104,16 +105,16 @@ CREATE TABLE Appointments (
 
 CREATE TABLE roster (
   roster_date DATE PRIMARY KEY,
-  supervisor_id int NOT NULL,
   doctor_id int NOT NULL,
+  supervisor_id int NOT NULL,
   care_one_id int NOT NULL,
-  care_one_group SMALLINT NOT NULL,
+  care_one_group smallint NOT NULL,
   care_two_id int NOT NULL,
-  care_two_group SMALLINT NOT NULL,
+  care_two_group smallint NOT NULL,
   care_three_id int NOT NULL,
-  care_three_group SMALLINT NOT NULL,
+  care_three_group smallint NOT NULL,
   care_four_id int NOT NULL,
-  care_four_group SMALLINT NOT NULL,
+  care_four_group smallint NOT NULL,
 
   FOREIGN KEY (supervisor_id)
     REFERENCES Users (user_id)
