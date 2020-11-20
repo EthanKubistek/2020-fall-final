@@ -3,6 +3,7 @@
 CREATE DATABASE  IF NOT EXISTS 2020project;
 USE 2020project;
 
+/* dropping existing tables*/
 
 DROP TABLE IF EXISTS Users;
 
@@ -26,25 +27,27 @@ CREATE TABLE Users (
     Phone varchar(255),
     Password varchar(255),
     DOB varchar(255),
-    FOREIGN KEY (Role_id)
+    Role int NOT NULL
+    FOREIGN KEY (Role)
       REFERENCES Role(Role_id)
       ON DELETE CASCADE
 );
 
+/* Table of the user roles*/
+
 CREATE TABLE Role (
     Role_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name varchar(255) NOT NULL,
+    Role_name varchar(255) NOT NULL,
     access_lvl int NOT NULL,
-    FOREIGN KEY (User_id)
-      REFERENCES Users(User_id)
-      ON DELETE CASCADE
+
+    Unique(Role_name)
 );
 
 CREATE TABLE Employess (
     employee_id int NOT NULL PRIMARY KEY,
     salary int,
     group_id int NOT NULL,
-    FOREIGN KEY (User_id)
+    FOREIGN KEY (employee_id)
       REFERENCES Users(User_id)
       ON DELETE CASCADE
 
@@ -57,40 +60,82 @@ CREATE TABLE Patient (
     emergency_contact varchar(255) NOT NULL,
     relation_to_ec varchar(255) NOT NULL,
     group_id varchar(255) NOT NULL,
-    FOREIGN KEY (User_id)
+    admit_date DATE,
+    FOREIGN KEY (Patient_id)
       REFERENCES Users(User_id)
       ON DELETE CASCADE
 );
 
 CREATE TABLE Checklist (
     List_id int AUTO_INCREMENT PRIMARY KEY,
-    Dates date NOT NULL,
-    am_med BOOLEAN NOT NULL,
-    pm_med BOOLEAN NOT NULL,
-    eve_med BOOLEAN NOT NULL,
+    list_date date NOT NULL,
+    morn_med BOOLEAN NOT NULL,
+    night_med BOOLEAN NOT NULL,
+    afternoon_med BOOLEAN NOT NULL,
     night_med BOOLEAN NOT NULL,
     breakfast BOOLEAN NOT NULL,
     lunch BOOLEAN NOT NULL,
     dinner BOOLEAN NOT NULL,
     FOREIGN KEY (Patient_id)
-      REFERENCES Patient(Patient_id)
-      ON DELETE CASCADE,
+    REFERENCES Users(User_id)
+    ON DELETE CASCADE,
     FOREIGN KEY (employee_id)
-      REFERENCES Employess(employee_id)
+      REFERENCES Users(User_id)
       ON DELETE CASCADE
 );
 
 CREATE TABLE Appointments (
     appt_id INT AUTO_INCREMENT PRIMARY KEY,
-    Dates date NOT NULL,
-    comment varchar(255) NOT NULL,
-    am_med varchar(255) NOT NULL,
-    pm_med varchar(255) NOT NULL,
-    night_med varchar(255) NOT NULL,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appt_date DATE NOT NULL,
+    comment TEXT,
+    morn_med VARCHAR(255),
+    afternoon_med VARCHAR(255),
+    night_med VARCHAR(255),
     FOREIGN KEY (Patient_id)
-      REFERENCES Patient(Patient_id)
+      REFERENCES Users(User_id)
       ON DELETE CASCADE,
+
     FOREIGN KEY (employee_id)
-      REFERENCES Employess(employee_id)
+      REFERENCES Users(User_id)
       ON DELETE CASCADE
+);
+
+CREATE TABLE roster (
+  roster_date DATE PRIMARY KEY,
+  supervisor_id int NOT NULL,
+  doctor_id int NOT NULL,
+  care_one_id int NOT NULL,
+  care_one_group SMALLINT NOT NULL,
+  care_two_id int NOT NULL,
+  care_two_group SMALLINT NOT NULL,
+  care_three_id int NOT NULL,
+  care_three_group SMALLINT NOT NULL,
+  care_four_id int NOT NULL,
+  care_four_group SMALLINT NOT NULL,
+
+  FOREIGN KEY (supervisor_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE,
+
+  FOREIGN KEY (doctor_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE,
+
+  FOREIGN KEY (care_one_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE,
+
+  FOREIGN KEY (care_two_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE,
+
+  FOREIGN KEY (care_three_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE,
+
+  FOREIGN KEY (care_four_id)
+    REFERENCES Users (user_id)
+    ON DELETE CASCADE
 );
